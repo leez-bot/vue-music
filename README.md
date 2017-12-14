@@ -1,17 +1,17 @@
 # vue-music
 
-> 音乐播放器
+> 基于vue2.0制作的音乐播放器
 
 ## Build Setup
 
 ``` bash
-# install dependencies
+# install dependencies// 安装依赖
 npm install
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at localhost:8080 // 运行项目
 npm run dev
 
-# build for production with minification
+# build for production with minification // 打包项目
 npm run build
 
 # build for production and view the bundle analyzer report
