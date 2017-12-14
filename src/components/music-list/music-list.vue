@@ -1,0 +1,250 @@
+<template>
+  <div class="music-list">
+    <div class="back" @click='back'>
+      <i class="icon-back"></i>
+    </div>
+
+    <h1 class="title" v-html='title'></h1>
+    <div class="bg-image" :style='bgStyle' ref='bgImage'>
+      <div class="play-wrapper">
+        <div class="play" v-show='songs.length>0' ref='playBtn' @click='random'>
+          <i class="icon-play"></i>
+          <span class="text">随机播放全部</span>
+        </div>
+      </div>
+      <div class="filter" ref='filter'></div>
+    </div>
+    
+    <!-- 信息列表上下滑动时遮罩层 -->
+    <div class="bg-layer" ref='layer'>
+      
+    </div>
+    <scroll @scroll='scroll' :data='songs' class='list' ref='list' :probe-type='probeType' :listen-scroll='lisenScroll'>
+      <div class="song-list-wrapper">
+        <song-list :rank='rank' @select='selectItem' :songs='songs'></song-list>
+      </div>
+
+      <div class="loading-wrapper" v-show='!songs.length'>
+        <loading></loading>
+      </div>
+    </scroll>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+  import Scroll from 'base/scroll/scroll'
+  import SongList from 'base/song-list/song-list'
+  import {prefixStyle} from 'common/js/dom'
+  import Loading from 'base/loading/loading'
+  // vuex提供的调用actions方法的语法糖
+  import {mapActions} from 'vuex'
+
+  import {playlistMixin} from 'common/js/mixin'
+
+  const TOP_HEIGHT = 40;
+  const transform = prefixStyle('transform')
+  const backdrop = prefixStyle('backdrop-filter')
+
+  export default {
+    // 组件同名方法会覆盖mixin方法
+    mixins: [playlistMixin],
+    props:{
+      bgImage: {
+        type: String,
+        default: ''
+      },
+      songs: {
+        type: Array,
+        default: []
+      },
+      title: {
+        type: String,
+        default: ''
+      },
+      rank: {
+        type: Boolean,
+        default: false
+      }
+    },
+    data(){
+      return {
+        scrollY :0
+      }
+    },
+    created() {
+      // 传递给scroll组件，监听滚动时的滚动事件，将其返回并进行操作
+      this.probeType = 3
+      this.lisenScroll = true
+    },
+    methods:{
+      handlePlaylist(playlist) {
+        const bottom = playlist.length > 0 ? '60px' : ''
+        this.$refs.list.$el.style.bottom = bottom;
+        this.$refs.list.refresh();
+      },
+      //监听滚动列表的滚动事件
+      scroll(pos){
+        this.scrollY = pos.y;
+      },
+      //返回歌手列表页
+      back(){
+        this.$router.back();
+      },
+      // 选中播放歌曲
+      selectItem(item, index) {
+        this.selectPlay({
+          list: this.songs,
+          index: index
+        })
+      },
+      // 随机播放全瓿
+      random() {
+        this.randomPlay({
+          list: this.songs
+        })
+      },
+      // 使用mapActions代理选中歌曲操作
+      ...mapActions([
+        'selectPlay',
+        'randomPlay'
+      ])
+    },
+    watch: {
+      scrollY(newY) {
+        // 取图片的高度值和滚动位置的最大值，为layer最大滚动高度
+        let translateY = Math.max(this.minTranslateY,newY) + TOP_HEIGHT;
+        let zIndex = 0;
+        let scale = 1;//图片放大缩小
+        let blur = 0;//背景模糊效果
+        this.$refs.layer.style[transform] = `translate3D(0,${translateY}px,0)`
+        // 背景图根据滑动情况实现放大缩小
+        const percent = Math.abs(newY/this.imageHeight);
+        if(newY > 0){
+          scale = 1 + percent; 
+          zIndex = 10;
+        }else{
+          blur = Math.min(20*percent,20);
+        }
+        this.$refs.filter.style[backdrop] = `blur({$blur}px)`
+
+        // 当滚动值超过最大滚动值时，改变背景图的显示方式，让背景的层级盖住滚动列表
+        if(newY < this.minTranslateY){
+          this.$refs.bgImage.style.paddingTop = 0;
+          this.$refs.bgImage.style.height = TOP_HEIGHT + 'px';
+          zIndex = 10;
+          this.$refs.playBtn.style.display = 'none'
+        }else{
+          this.$refs.bgImage.style.paddingTop = '70%';
+          this.$refs.bgImage.style.height = 0;
+          this.$refs.playBtn.style.display = ''
+        }
+        this.$refs.bgImage.style.zIndex = zIndex;
+        this.$refs.bgImage.style[transform] = `scale(${scale})`
+      }
+    },
+    computed:{
+      bgStyle(){
+        return `background-image:url(${this.bgImage})`
+      }
+    },
+    mounted() {
+      this.imageHeight = this.$refs.bgImage.clientHeight;
+      this.minTranslateY = -this.imageHeight;
+      // 列表加载完成后，动态计算头部图片高度并手动改变列表容器的位置
+      this.$refs.list.$el.style.top = `${this.imageHeight}px`
+    },
+    components: {
+      Scroll, SongList, Loading
+    }
+  }
+</script>
+
+<style lang='stylus' rel='stylesheet/stylus'>
+  @import "~common/stylus/variable";
+  @import "~common/stylus/mixin";
+
+  .music-list
+    position: fixed
+    z-index: 100
+    top: 0
+    left: 0
+    bottom: 0
+    right: 0
+    background: $color-background
+    .back
+      position absolute
+      top: 0
+      left: 6px
+      z-index: 50
+      .icon-back
+        display: block
+        padding: 10px
+        font-size: $font-size-large-x
+        color: $color-theme
+    .title
+      position: absolute
+      top: 0
+      left: 10%
+      z-index: 40
+      width: 80%
+      no-wrap()
+      text-align: center
+      line-height: 40px
+      font-size: $font-size-large
+      color: $color-text
+    .bg-image
+      position: relative
+      width: 100%
+      height: 0
+      padding-top: 70%
+      transform-origin: top
+      background-size: cover
+      .play-wrapper
+        position: absolute
+        bottom: 20px
+        z-index: 50
+        width: 100%
+        .play
+          box-sizing: border-box
+          width: 135px
+          padding: 7px 0
+          margin: 0 auto
+          text-align: center
+          border: 1px solid $color-theme
+          color: $color-theme
+          border-radius: 100px
+          font-size: 0
+          .icon-play
+            display: inline-block
+            vertical-align: middle
+            margin-right: 6px
+            font-size: $font-size-medium-x
+          .text
+            display: inline-block
+            vertical-align: middle
+            font-size: $font-size-small
+      .filter
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+        background: rgba(7, 17, 27, 0.4)
+    .bg-layer
+      position: relative
+      height: 100%
+      background: $color-background
+    .list
+      position: fixed
+      top: 0
+      bottom: 0
+      width: 100%
+      background: $color-background
+      .song-list-wrapper
+        padding: 20px 30px
+      .loading-container
+        position: absolute
+        width: 100%
+        top: 50%
+        transform: translateY(-50%)
+</style>
