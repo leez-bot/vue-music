@@ -169,6 +169,7 @@
     created() {
       // 屏幕左右滑动切换CD/歌词页面
       this.touch = {};
+      console.log(this.currentSong);
     },
     methods: {
       back() {

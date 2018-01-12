@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2017-09-28 21:29:06
 * @Last Modified by:   leeZ
-* @Last Modified time: 2017-11-23 23:19:58
+* @Last Modified time: 2018-01-11 17:05:11
 */
 import {getLyric} from 'api/song'
 import {ERR_OK} from 'api/config'
@@ -52,7 +52,12 @@ export function createSong(musicData){
         // 歌曲图片地址
         image: `//y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
         // 歌曲播放地址
-        url:`http://ws.stream.qqmusic.qq.com/${musicData.songid}.m4a?fromtag=46`
+        // 初版播放地址
+        // url:`http://ws.stream.qqmusic.qq.com/${musicData.songid}.m4a?fromtag=46`
+        // 2018.1月播放地址 vkey为随机生成
+        url:`http://dl.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a??fromtag=38&vkey=A33EF139195273E11EAFA3A9190962244E47EC31442EE6670CBE75331B23A44107A47E52F0509DD354D964FA35342E9ACC69D3D56C764D04&guid=4843775074`
+        // 通用播放地址
+        // url:`http://isure.stream.qqmusic.qq.com/C100${musicData.songmid}.m4a?fromtag=32`
     })
 }
 
