@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2017-09-25 22:28:33
 * @Last Modified by:   leeZ
-* @Last Modified time: 2017-11-29 20:39:54
+* @Last Modified time: 2018-06-22 13:56:00
 */
 
 // vuex数据操作常量（修改操作）
@@ -30,3 +30,5 @@ export const SET_SEARCH_HISTORY = 'SET_SEARCH_HISTORY'
 export const SET_PLAY_HISTORY = 'SET_PLAY_HISTORY'
 
 export const SET_FAVORITE_LIST = 'SET_FAVORITE_LIST'
+
+export const SET_CURRENTSONG_URL = 'SET_CURRENTSONG_URL'

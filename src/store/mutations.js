@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2017-09-25 22:28:08
 * @Last Modified by:   leeZ
-* @Last Modified time: 2017-11-29 20:40:25
+* @Last Modified time: 2018-06-22 13:56:54
 */
 
 // vuex数据修改操作
@@ -45,6 +45,9 @@ const mutations = {
     },
     [types.SET_FAVORITE_LIST](state,list) {
       state.favoriteList = list
+    },
+    [types.SET_CURRENTSONG_URL](state, url) {
+      state.currentSong.url = url
     }
 }
 

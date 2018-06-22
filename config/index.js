@@ -28,7 +28,18 @@ module.exports = {
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+        // '/api/getDiscList' : {
+        //     target: 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg',
+        //     bypass: function(req, res, proxyOptions) {
+        //         req.headers.referer = 'https://c.y.qq.com/';
+        //         req.headers.host = 'c.y.qq.com'
+        //     },
+        //     pathRewrite: {
+        //         '^/api/getDiscList': ''
+        //     }
+        // }
+    },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
     // (https://github.com/webpack/css-loader#sourcemaps)

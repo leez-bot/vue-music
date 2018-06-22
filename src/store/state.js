@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2017-09-25 22:27:30
 * @Last Modified by:   leeZ
-* @Last Modified time: 2017-11-29 20:48:21
+* @Last Modified time: 2018-06-22 13:55:19
 */
 
 import {playMode} from 'common/js/config'
@@ -19,6 +19,7 @@ const state = {
     playlist: [],// 当前播放列表
     sequenceList: [],// 原始列表
     mode: playMode.sequence, // 默认顺序播放
+    currentSong: {}, //当前播放歌曲
     currentIndex : -1, //当前播放索引
     disc: {},// 当前选择的歌单对象
     topList: {},// 当前选择的榜单信息

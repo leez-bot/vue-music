@@ -2,15 +2,17 @@
 * @Author: anchen
 * @Date:   2017-09-28 21:29:06
 * @Last Modified by:   leeZ
-* @Last Modified time: 2018-01-11 17:05:11
+* @Last Modified time: 2018-06-22 10:57:19
 */
 import {getLyric} from 'api/song'
+import {getSongVkey} from 'api/singer'
 import {ERR_OK} from 'api/config'
 import {Base64} from 'js-base64'
+var vkey = ''
 // 歌曲类
 // 
 export default class Song {
-    constructor({id, mid, singer, name, album, duration, image, url}){
+    constructor({id, mid, singer, name, album, duration, image, url, vkey}){
         this.id = id
         this.mid = mid
         this.singer = singer
@@ -19,6 +21,7 @@ export default class Song {
         this.duration = duration
         this.image = image
         this.url = url
+        this.vkey = vkey
     }
     // 调用接口，获取歌词信息并将信息加入到歌曲类中
     getLyric() {
@@ -41,7 +44,8 @@ export default class Song {
 
 
 // 创建歌曲对象
-export function createSong(musicData){
+export function createSong(musicData, vkey){
+    // console.log(vkey)
     return new Song({
         id: musicData.songid,
         mid: musicData.songmid,
@@ -54,10 +58,11 @@ export function createSong(musicData){
         // 歌曲播放地址
         // 初版播放地址
         // url:`http://ws.stream.qqmusic.qq.com/${musicData.songid}.m4a?fromtag=46`
-        // 2018.1月播放地址 vkey为随机生成
-        url:`http://dl.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a??fromtag=38&vkey=A33EF139195273E11EAFA3A9190962244E47EC31442EE6670CBE75331B23A44107A47E52F0509DD354D964FA35342E9ACC69D3D56C764D04&guid=4843775074`
-        // 通用播放地址
-        // url:`http://isure.stream.qqmusic.qq.com/C100${musicData.songmid}.m4a?fromtag=32`
+        // 通用播放地址 2018/6月不可用，需要加vkey
+        // url:`http://dl.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?fromtag=32`
+        // vkey:F478812E0533A8FE0B8B9F78F5FB60BFBCD9680E903A83C0DB07D315507D22A82AB387911B4B7D8005A87DD1678F2E08057A45FB4FB46D31
+        // 2018.1月播放地址 vkey为随机生成 (2018/6月添加vkey参数)
+        url:`http://dl.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?guid=4843775074&vkey=CD54FB287B5ADDC3B8C7AFAB42C9EADB662780A1522534CF02F4D2A340CFB77BE641244B441ADC626751370ECFD3915D287F37CCB08A5CF5&uin=855&fromtag=38`
     })
 }
 

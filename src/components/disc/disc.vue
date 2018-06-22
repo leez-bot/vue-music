@@ -8,6 +8,7 @@
   import MusicList from 'components/music-list/music-list'
   import {mapGetters} from 'vuex'
   import {getSongList} from 'api/recommend'
+  import {getSongVkey} from 'api/singer'
   import {ERR_OK} from 'api/config'
   import {createSong} from 'common/js/song'
 
@@ -47,11 +48,11 @@
       },
       _normalizeSongs(list) {
         let ret = [];
-        list.forEach((musicData) => {
+        list.forEach(musicData => {
           if(musicData.songid && musicData.albumid) {
             ret.push(createSong(musicData))
           }
-        }) 
+        })
         return ret
       }
     },

@@ -2,11 +2,13 @@
 * @Author: anchen
 * @Date:   2017-09-12 21:53:15
 * @Last Modified by:   leeZ
-* @Last Modified time: 2017-11-21 20:32:18
+* @Last Modified time: 2018-06-22 10:53:06
 */
 import jsonp from 'common/js/jsonp'
 import {commonParams,options1} from './config'
 import axios from 'axios'
+
+const debug = process.env.NODE_ENV !== 'production'
 
 export function getRecommend(){
     const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg';
@@ -20,7 +22,7 @@ export function getRecommend(){
 }
 
 export function getDiscList(){
-    const url = '/api/getDiscList';
+    const url = debug ? '/api/getDiscList' : `http://${window.location.host}/api/getDiscList`;
     const data = Object.assign({},commonParams,{
         platform: 'yqq',
         uin:0,
@@ -45,7 +47,7 @@ export function getDiscList(){
 
 // 获取歌单详情
 export function getSongList(disstid) {
-    const url = '/api/getSongList'
+    const url =  debug ? '/api/getSongList' : `http://${window.location.host}/api/getSongList`;
     const data = Object.assign({},commonParams,{
         disstid,
         type:1,

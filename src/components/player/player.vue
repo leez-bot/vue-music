@@ -169,7 +169,7 @@
     created() {
       // 屏幕左右滑动切换CD/歌词页面
       this.touch = {};
-      console.log(this.currentSong);
+      // console.log(this.currentSong);
     },
     methods: {
       back() {
@@ -291,6 +291,7 @@
       // 播放器正常播放/无播放地址错误回调
       ready() {
         this.songReady = true;
+        // Player.play(this.currentSong.mid)
         this.savePlayHistory(this.currentSong)
       },
       error() {
@@ -437,13 +438,19 @@
       },
       // mutation代理操作
       ...mapMutations({
-        setFullScreen: 'SET_FULL_SCREEN'
+        setFullScreen: 'SET_FULL_SCREEN',
+        setCurrentSongUrl: 'SET_CURRENTSONG_URL'
       }),
       ...mapActions([
         'savePlayHistory'
       ])
     },
     watch: {
+      // Player(newState, oldState) {
+      //   if(Player.playReady().state == 'playing') {
+      //     this.setCurrentSongUrl(Player.data.song.url)
+      //   }
+      // },
       currentSong(newSong,oldSong) {
         // 当删除列表中最后一首歌曲时，没有下一首歌曲，不用再切换
         if(!newSong.id) {

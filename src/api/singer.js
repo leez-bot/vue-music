@@ -1,8 +1,8 @@
 /* 
 * @Author: anchen
 * @Date:   2017-09-19 22:07:11
-* @Last Modified by:   anchen
-* @Last Modified time: 2017-09-25 23:50:32
+* @Last Modified by:   leeZ
+* @Last Modified time: 2018-06-21 11:48:51
 */
 
 import jsonp from 'common/js/jsonp'
@@ -43,4 +43,22 @@ export function getSingerDetail(singerId) {
   })
 
   return jsonp(url,data,options1);
+}
+
+export function getSongVkey (songmid) { // 获取歌曲的vkey
+  const url = 'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg'
+  const data = Object.assign({}, {
+    callback: 'musicJsonCallback',
+    loginUin: 3051522991,
+    format: 'jsonp',
+    platform: 'yqq',
+    needNewCode: 0,
+    cid: 205361747,
+    uin: 3051522991,
+    guid: 5931742855,
+    songmid: songmid,
+    filename: `C400${songmid}.m4a`
+  })
+
+  return jsonp(url, data)
 }
